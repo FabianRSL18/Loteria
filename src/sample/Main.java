@@ -1,21 +1,26 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import sample.views.ClientesBD;
 import sample.views.Loteria;
 import sample.views.Parseador;
 
-public class Main extends Application {
+public class Main extends Application implements EventHandler {
 
     private VBox vBox;
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
-    private MenuItem mitLoteria, mitParseador;
+    private MenuItem mitLoteria, mitParseador,mitClientes;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -26,8 +31,10 @@ public class Main extends Application {
         mitLoteria.setOnAction(event -> Eventos(1));
         mitParseador = new MenuItem("Codigo Morse");
         mitParseador.setOnAction(event -> Eventos(2));
+        mitClientes = new MenuItem("Taqueria");
+        mitClientes.setOnAction(event -> Eventos(3));
 
-        menCompetencia1.getItems().addAll(mitLoteria,mitParseador);
+        menCompetencia1.getItems().addAll(mitLoteria,mitParseador,mitClientes);
 
         menCompetencia2 = new Menu("Competencia 2");
         mnbPrincipal.getMenus().addAll(menCompetencia1,menCompetencia2);
@@ -35,8 +42,13 @@ public class Main extends Application {
         vBox = new VBox();
         vBox.getChildren().addAll(mnbPrincipal);
 
+
+        primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWING,this);
+        primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,this);
+        Scene escena = new Scene(vBox,300,275);
+        escena.getStylesheets().add(getClass().getResource("css/styles.css").toExternalForm());
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(vBox, 300, 275));
+        primaryStage.setScene(escena);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
@@ -45,6 +57,7 @@ public class Main extends Application {
         switch (opc){
             case 1: new Loteria(); break;
             case 2: new Parseador(); break;
+            case 3: new ClientesBD();break;
 
         }
     }
@@ -52,5 +65,15 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void handle(Event event) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Bienvenidos :)");
+        alerta.setHeaderText("Mensaje del sistema :)");
+        alerta.setContentText("Manejo de eventos de la ventana usando dialogos");
+        alerta.showAndWait();
+
     }
 }
