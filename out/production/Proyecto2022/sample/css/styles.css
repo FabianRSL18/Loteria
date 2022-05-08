@@ -3,3 +3,11 @@
     -fx-background-size: cover;
     -fx-background-position: center;
 }
+MenuBar{
+    -fx-background-color: #5D5C5C;
+    -fx-text-fill: #FFFFFF;
+}
+.MenuItem{
+    -fx-background-color: #858585;
+    -fx-text-fill: #FFFFFF;
+}

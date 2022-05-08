@@ -11,6 +11,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import sample.models.Conexion;
 import sample.views.ClientesBD;
 import sample.views.Loteria;
 import sample.views.Parseador;
@@ -47,10 +48,12 @@ public class Main extends Application implements EventHandler {
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,this);
         Scene escena = new Scene(vBox,300,275);
         escena.getStylesheets().add(getClass().getResource("css/styles.css").toExternalForm());
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Proyecto Topicos");
         primaryStage.setScene(escena);
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+        Conexion.crearConexion();
     }
 
     private void Eventos(int opc) {

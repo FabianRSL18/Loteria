@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -118,7 +119,8 @@ public class Loteria extends Stage implements EventHandler {
         PlatillaInicio();
         //imgCarta = new Image("");
         hBox2 = new HBox();
-        hBox2.getChildren().addAll(gdpPlantilla);
+
+        //hBox2.getChildren().addAll(gdpPlantilla);
 
         pantalla=new HBox();
         btnCarta=new Button();
@@ -127,15 +129,19 @@ public class Loteria extends Stage implements EventHandler {
         imvVolteada.setFitHeight(240);
         imvVolteada.setFitWidth(135);
         btnCarta.setGraphic(imvVolteada);
-
+        btnCarta.setPrefWidth(135);
+        btnCarta.setPrefHeight(240);
 
 
         pantalla.getChildren().add(btnCarta);
         pantalla.setAlignment(Pos.CENTER);
 
+        hBox2.setSpacing(8);
+        hBox2.getChildren().addAll(gdpPlantilla,pantalla);
+
         btnJugar = new Button("Jugar");
         btnJugar.addEventHandler(MouseEvent.MOUSE_CLICKED,this);
-        btnJugar.setPrefWidth(400);
+        btnJugar.setPrefWidth(368);
 
 
         arBtnPlantilla[0][0].setOnAction(new EventHandler<ActionEvent>() {
@@ -238,9 +244,13 @@ public class Loteria extends Stage implements EventHandler {
 
 
         vBox = new VBox();
-        vBox.getChildren().addAll(hBox1,hBox2,btnJugar,pantalla);
+        vBox.setSpacing(5);
+        vBox.setPadding(new Insets(5));
+        vBox.getChildren().addAll(hBox1,hBox2,btnJugar);
 
-    escena = new Scene(vBox, 350,735);
+    escena = new Scene(vBox, 543,528);
+
+    escena.getStylesheets().add("sample/css/Loteria.css");
     }
 
     public void PlatillaInicio(){
@@ -408,8 +418,8 @@ public class Loteria extends Stage implements EventHandler {
                 System.out.println("Vector aux :"+vectoraux);
                 imgCarta = new Image("sample/images/"+arImages[n]);
                 imgJ = new ImageView(imgCarta);
-                imgJ.setFitWidth(70);
-                imgJ.setFitHeight(100);
+                imgJ.setFitWidth(135);
+                imgJ.setFitHeight(240);
                 btnCarta.setGraphic(imgJ);
             }
         }while(opc!=true);

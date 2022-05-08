@@ -15,15 +15,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Parseador extends Stage implements EventHandler<KeyEvent> {
 
     private VBox vBox;
     private ToolBar tlbMenu;
-    private TextArea txtEntrada;
-    private TextArea txtSalida;
+    private TextArea txtEntrada,txtSalida;
     private FileChooser flcArchivo;
     private Button btnAbrir,btnConvertir;
     private Scene escena;
@@ -32,9 +29,10 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
     private String Dato="" ,DatoRep="";
 
     private String[] morse={".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","--.--","---"
-            ,".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."," "};
+            ,".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."," ","\n"};
     private String[] Letras={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V"
-            ,"W","X","Y","Z"," "};
+            ,"W","X","Y","Z"," ","ENTER"};
+
 
     public Parseador(){
         CrearUI();
@@ -46,30 +44,46 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
     private void CrearUI() {
         vBox = new VBox();
         tlbMenu = new ToolBar();
-        imgAbrir = new Image("sample/images/3643772_folder_archive_open_archives_document_icon.png");
+        //Imagen icono del boton para buscar archivos locales
+        imgAbrir = new Image("sample/images/Carpeta.png");
         imvAbrir = new ImageView(imgAbrir);
         imvAbrir.setFitHeight(25);
         imvAbrir.setFitWidth(25);
         btnAbrir = new Button();
         btnAbrir.setGraphic(imvAbrir);
         btnAbrir.setOnAction(event -> {
-            //Aqui va el bloque de codigo
+            //Se crea el buscador de archivos
             flcArchivo = new FileChooser();
+            //Titulo de la ventana abierta
             flcArchivo.setTitle("Buscar Archivo");
             File archivo=flcArchivo.showOpenDialog(this);
             try{
+                //Se crea el lector de archivos de texto
                 BufferedReader Leer = new BufferedReader(new FileReader(archivo));
+
+                //Se crea un string para guardar los datos del lector
                 String Linea=Leer.readLine();
+
                 while(Linea !=null){
-                    txtEntrada.appendText(Linea);
+                    //Se manda el texto al txt
+                    txtEntrada.appendText(Linea+"\n");
                     Linea = Leer.readLine();
+
+                    //Se utiliza el metodo traducir y se manda al text area de salida
+                    String Dato=txtEntrada.getText();
+                    System.out.println(Dato);
+                    String Traducido=traducir(Dato);
+                    System.out.println(Traducido);
+                    txtSalida.setPromptText(Traducido);
                 }
             }catch (IOException e){
 
             }
         });
+
         btnConvertir = new Button("Parsear");
         btnConvertir.setPrefWidth(600);
+
         btnConvertir.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -79,6 +93,7 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
                 txtSalida.setPromptText(Traducido);
             }
         });
+
         tlbMenu.getItems().addAll(btnAbrir);
 
         txtEntrada = new TextArea();
@@ -91,6 +106,8 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
         vBox.setPadding(new Insets(5));
         vBox.getChildren().addAll(tlbMenu,txtEntrada,txtSalida,btnConvertir);
         escena = new Scene(vBox,500,300);
+
+        escena.getStylesheets().add("sample/css/Parseador.css");
     }
 
     @Override
@@ -98,40 +115,24 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
 
         String Entrada=event.getCode().toString();
         if(Entrada=="SPACE"){
-             Dato=DatoRep+" ";
+            System.out.println("Si Conoce espacio");
+            DatoRep=Dato;
+            Dato=txtEntrada.getText()+" ";
+            String Traducido =traducir(Dato);
+            txtSalida.setText(Traducido);
         }else if(Entrada=="ENTER"){
-            Dato=DatoRep+" \n";
-            txtSalida.setPromptText("\n");
-            txtSalida.setPromptText(Dato);
+            System.out.println("Si conoce Enter");
+            DatoRep=Dato;
+            Dato=txtEntrada.getText()+" \n";
+
+            String Traducido=traducir(Dato);
+            txtSalida.setText(Traducido);
         }else{
             DatoRep=Dato;
             Dato=txtEntrada.getText();
             String Traducido=traducir(Dato);
-            txtSalida.setPromptText(Traducido);
+            txtSalida.setText(Traducido);
         }
-
-        /*Dato=txtEntrada.getText();
-        String Traducido=traducir(Dato);
-
-        if(Entrada=="SPACE"){
-            Dato=Dato+ " ";
-            Traducido=traducir(Dato);
-            txtSalida.setPromptText(Traducido);
-        }else if(Entrada=="Enter"){
-            Dato = Dato+"\n";
-            Traducido = traducir(Dato);
-            txtSalida.setPromptText(Traducido);
-        }
-
-        txtSalida.setPromptText(Traducido);
-        /*String Dato=traducir(Entrada);
-        String DatoRep="";
-
-        DatoRep=DatoRep+" "+Dato;
-        txtSalida.setPromptText(DatoRep);
-        System.out.println(event.getCode().toString());*/
-
-
     }
 
     public String traducir(String Dato){
@@ -143,14 +144,15 @@ public class Parseador extends Stage implements EventHandler<KeyEvent> {
         mayuscula = Dato.toUpperCase();
 
         for(int i=1; i<=Dato.length();i++){
+
             letra = mayuscula.substring(i-1, i);
+
             for(int j=0;j<Letras.length;j++){
                 if (letra.equals(Letras[j])){
+
                     traduccion = traduccion + morse[j]+ "   ";
                 }
-
             }
-
         }
         return traduccion;
     }
