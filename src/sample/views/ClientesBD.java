@@ -23,7 +23,7 @@ public class ClientesBD extends Stage{
     public ClientesBD(){
         cteDAO = new ClientesDAO();
         CrearUI();
-        this.setTitle("Clientes Taqueria :)");
+        this.setTitle("Clientes Taqueria");
         this.setScene(escena);
         this.show();
     }
@@ -35,8 +35,11 @@ public class ClientesBD extends Stage{
             new ClienteFRM(tbvClientes,null);
         });
         vBox = new VBox();
+        vBox.setSpacing(5);
         vBox.getChildren().addAll(tbvClientes,btnAgregar);
         escena = new Scene(vBox,700,250);
+
+        escena.getStylesheets().add("sample/css/Clientes.css");
 
         CrearTabla();
     }

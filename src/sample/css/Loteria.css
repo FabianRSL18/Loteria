@@ -13,6 +13,12 @@ Button{
     -fx-background-radius: 5 5 5 5;
     -fx-border-radius: 5 5 5 5;
 }
+Button:hover{
+    -fx-background-color: #23D4EC;
+}
+Button:pressed{
+    -fx-background-color: #16808F;
+}
 
 Label{
     -fx-text-fill: #FFFFFF;

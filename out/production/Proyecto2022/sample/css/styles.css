@@ -7,7 +7,9 @@ MenuBar{
     -fx-background-color: #5D5C5C;
     -fx-text-fill: #FFFFFF;
 }
-.MenuItem{
+.menu{
     -fx-background-color: #858585;
     -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 5 5 5 5;
+    -fx-border-radius: 5 5 5 5;
 }

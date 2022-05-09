@@ -26,3 +26,9 @@ Button{
     -fx-border-radius: 10 10 10 10;
     -fx-background-position: center;
 }
+Button:hover{
+    -fx-background-color: #81DCD1;
+}
+Button:pressed{
+    -fx-background-color:#5C978F;
+}

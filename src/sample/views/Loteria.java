@@ -60,6 +60,7 @@ public class Loteria extends Stage implements EventHandler {
     private String[] arImages = {"bandolon.jpg","barril.jpeg","botella.jpeg","campana.jpg","catrin.jpeg","chalupa.jpg","chavorruco.jpeg",
             "concha.jpeg","corazon.jpg","corona.jpg","cotorro.jpg","estrella.jpg","graduada.jpeg","luchador.jpeg","maceta.jpeg","negro.jpg",
             "pescado.jpg","rana.jpg","rosa.jpeg","sandia.jpg","soldado.jpg","tacos.jpeg","tambor.jpg","valiente.jpg","venado.jpeg"};
+
     private Button[][] arBtnPlantilla = new Button[4][4];
     private Button btnCarta;
     private Image imgCartaP,imgVolteada;
@@ -333,6 +334,7 @@ public class Loteria extends Stage implements EventHandler {
     public void handle(Event event) {
         btnSiguiente.setDisable(true);
         btnAtras.setDisable(true);
+        btnJugar.setDisable(true);
 
         int[] v_tiempo = {1};
         tmTiempo = new Timer();
@@ -401,7 +403,6 @@ public class Loteria extends Stage implements EventHandler {
         stage.close();
     }
 
-
     //Crea la tarjeta aleatoria y la manda al imgeView
     private void NuevaTarjeta() {
         boolean opc;
@@ -425,12 +426,14 @@ public class Loteria extends Stage implements EventHandler {
         }while(opc!=true);
         imprimirVec(cartas);
     }
+
     //Manda mensaje del valor aleatorio (no repetir numeros en el array)
     private void imprimirVec(int[] cartas) {
         for(int i=0;i<cartas.length;i++){
             System.out.println(cartas[i]);
         }
     }
+
     //Verifica array de 2da dimension y el de primera en la carta aleatoria
     private boolean verificar(int[] cartas, int n, int control) {
         for(int i=0;i<25;i++){
