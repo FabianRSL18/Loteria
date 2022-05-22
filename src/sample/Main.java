@@ -4,12 +4,11 @@ import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import sample.models.Conexion;
 import sample.views.ClientesBD;
@@ -22,6 +21,8 @@ public class Main extends Application implements EventHandler {
     private MenuBar mnbPrincipal;
     private Menu menCompetencia1, menCompetencia2;
     private MenuItem mitLoteria, mitParseador,mitClientes;
+    private Image ico;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -35,15 +36,18 @@ public class Main extends Application implements EventHandler {
         mitClientes = new MenuItem("Taqueria");
         mitClientes.setOnAction(event -> Eventos(3));
 
+
         menCompetencia1.getItems().addAll(mitLoteria,mitParseador,mitClientes);
 
         menCompetencia2 = new Menu("Competencia 2");
+
         mnbPrincipal.getMenus().addAll(menCompetencia1,menCompetencia2);
 
         vBox = new VBox();
         vBox.getChildren().addAll(mnbPrincipal);
 
-
+        //primaryStage.initStyle(StageStyle.TRANSPARENT);
+        
         primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWING,this);
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST,this);
         Scene escena = new Scene(vBox,300,275);
@@ -55,6 +59,7 @@ public class Main extends Application implements EventHandler {
 
         Conexion.crearConexion();
     }
+
 
     private void Eventos(int opc) {
         switch (opc){

@@ -1,5 +1,6 @@
 package sample.views;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -25,6 +26,8 @@ import javafx.util.Duration;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static sun.misc.PostVMInitHook.run;
 
 public class Loteria extends Stage implements EventHandler {
 
@@ -67,6 +70,7 @@ public class Loteria extends Stage implements EventHandler {
     private ImageView imv,imgJ,imvVolteada;
     private int CartasFaltantes=16;
     int []cartas= new int[arImages.length];
+    Boolean cerrar=false;
 
     public Loteria(){
         CrearUI();
@@ -250,7 +254,6 @@ public class Loteria extends Stage implements EventHandler {
         vBox.getChildren().addAll(hBox1,hBox2,btnJugar);
 
     escena = new Scene(vBox, 543,528);
-
     escena.getStylesheets().add("sample/css/Loteria.css");
     }
 
@@ -273,22 +276,32 @@ public class Loteria extends Stage implements EventHandler {
     private void control(int n, int reg, int col) {
         int aux=0;
         System.out.println("Plantilla : "+cont);
-        // System.out.println("Aleatorio : "+n);
         for (int i=0;i<arBtnPlantilla.length;i++){
             for(int j=0;j<arBtnPlantilla[0].length;j++){
-                //System.out.println("pos reg :"+i+"  col  :"+j);
                 System.out.println(arImages[n]+arImages2[cont][aux]);
                 if(i==reg && j==col){
-                    //System.out.println("Entro PRIMER if");
                     if(arImages[n].equalsIgnoreCase(arImages2[cont][aux])){
-                       // System.out.println(arImages[n]+"    "+arImages2[cont][aux]);
                         CartasFaltantes--;
                         String cartaF="";
                         cartaF=cartaF+CartasFaltantes;
                         lblCartaFalt.setText(cartaF);
                         BorraCarta(i,j);
-                        NuevaTarjeta();
-                        animacion.playFromStart();
+                         if(vectoraux==25){
+                            Resultado(CartasFaltantes);
+                            cerrar=true;
+                            animacion.stop();
+                            this.close();
+                         }
+                        if(CartasFaltantes!=0){
+                            NuevaTarjeta();
+                            cerrar=false;
+                            animacion.playFromStart();
+                        }else{
+                            Resultado(CartasFaltantes);
+                            animacion.stop();
+                            cerrar=true;
+                            this.close();
+                        }
                         }
                 }
                 aux++;
@@ -307,8 +320,6 @@ public class Loteria extends Stage implements EventHandler {
         arBtnPlantilla [cont][aux].setGraphic(imgBorrado);
         arBtnPlantilla [cont][aux].getBackground();
         arBtnPlantilla[cont][aux].setDisable(true);
-        //4
-        // gdpPlantilla.add(arBtnPlantilla[cont][aux], cont, aux);
 
     }
 
@@ -348,36 +359,51 @@ public class Loteria extends Stage implements EventHandler {
                     if(conserva==250){
                         tmtTarea.cancel();
                     }
-                    if(vectoraux==24){
+                    if(vectoraux==25){
                         tmtTarea.cancel();
                     }
                     if(CartasFaltantes==0){
+                        Resultado(CartasFaltantes);
                         tmtTarea.cancel();
                     }
                 }else{
-
                     v_tiempo[0] = 0;
                 }
             }
         };
         tmTiempo.scheduleAtFixedRate(tmtTarea,1000,1000);
         NuevaTarjeta();
-         animacion= new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
+         animacion= new Timeline(new KeyFrame(Duration.seconds(4), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                NuevaTarjeta();
-                if(CartasFaltantes==0){
-                    animacion.stop();
-                    Resultado(CartasFaltantes);
-                }
-
-                if(vectoraux==24){
-                    animacion.stop();
+                 NuevaTarjeta();
+                 if(vectoraux==25){
+                     if(cerrar!=true){
+                         Cerrar();
+                     }
+                    // System.exit(0);
                 }
             }
         }));
-        animacion.setCycleCount(Timeline.INDEFINITE);
-        animacion.play();
+        animacion.setCycleCount(25);
+         animacion.play();
+        Timeline timeline= new Timeline(new KeyFrame(Duration.seconds(1),new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Num Cartas : "+vectoraux);
+                if(CartasFaltantes==0){
+                    Resultado(CartasFaltantes);
+                   // System.exit(0);
+                }
+                if(vectoraux==25){
+                    Resultado(CartasFaltantes);
+                   // System.exit(0);
+                }
+            }
+        })) ;
+        //timeline.play();
+        timeline.stop();
+        timeline.setCycleCount(timeline.INDEFINITE);
     }
 
     private void Resultado(int cartasFaltantes) {
@@ -391,10 +417,14 @@ public class Loteria extends Stage implements EventHandler {
         }else {
             Alert resul = new Alert(Alert.AlertType.INFORMATION);
             resul.setTitle("Sigue intentandolo");
-            resul.setHeaderText("Usted ha ganado la loteria");
+            resul.setHeaderText("Usted ha Perdido!!!");
             resul.setContentText("");
             resul.showAndWait();
         }
+    }
+    private void Cerrar(){
+        Resultado(CartasFaltantes);
+        this.close();
     }
 
     private void cerrar(ActionEvent event){
@@ -408,7 +438,6 @@ public class Loteria extends Stage implements EventHandler {
         boolean opc;
         do{
             n=(int)(Math.random()*25+0);
-           // System.out.println(n);
             opc = verificar(cartas,n,control);
             if(n==0){
                 control++;
@@ -424,7 +453,7 @@ public class Loteria extends Stage implements EventHandler {
                 btnCarta.setGraphic(imgJ);
             }
         }while(opc!=true);
-        imprimirVec(cartas);
+        //imprimirVec(cartas);
     }
 
     //Manda mensaje del valor aleatorio (no repetir numeros en el array)

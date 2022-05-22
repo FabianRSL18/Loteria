@@ -22,8 +22,8 @@ Button{
     -fx-font-family: "Georgia";
     -fx-font-style: italic;
     -fx-font-size: 18px;
-    -fx-background-radius: 10 10 10 10;
-    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 0 10 0 10;
+    -fx-border-radius: 0 10 0 10;
     -fx-background-position: center;
 }
 Button:hover{
